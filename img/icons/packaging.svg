@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Empaques y envolturas">
+  <g fill="none" stroke="#111111" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter">
+    <path d="M16 18l16-8 16 8v28l-16 8-16-8V18z"/>
+    <path d="M16 18l16 8 16-8"/>
+    <path d="M32 26v28"/>
+  </g>
+  <path d="M24 34h16v6H24z" fill="#FC680C"/>
+</svg>

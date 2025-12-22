@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Productos industriales">
+  <g fill="none" stroke="#111111" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter">
+    <path d="M10 50V26l12 8v-8l12 8v-8l20 12v12H10z"/>
+    <path d="M16 50V38h10v12"/>
+    <path d="M32 50V42h10v8"/>
+    <path d="M14 22v-8h10v8"/>
+  </g>
+  <rect x="10" y="50" width="44" height="4" fill="#FC680C"/>
+</svg>

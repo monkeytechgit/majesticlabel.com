@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Químicos y limpieza">
+  <g fill="none" stroke="#111111" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter">
+    <path d="M24 10h16"/>
+    <path d="M28 10v10l-10 18a12 12 0 0 0 10 18h8a12 12 0 0 0 10-18L36 20V10"/>
+    <path d="M22 40h20"/>
+  </g>
+  <path d="M32 44c4 0 6 2 6 6-4 0-6-2-6-6Z" fill="#FC680C"/>
+</svg>

@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Institucional y educativo">
+  <g fill="none" stroke="#111111" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter">
+    <path d="M12 24l20-10 20 10-20 10-20-10Z"/>
+    <path d="M18 30v12c0 4 6 8 14 8s14-4 14-8V30"/>
+    <path d="M52 24v14"/>
+  </g>
+  <path d="M52 40c-2 0-4-2-4-4h8c0 2-2 4-4 4Z" fill="#FC680C"/>
+</svg>

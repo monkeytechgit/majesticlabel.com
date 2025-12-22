@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Alimentos y bebidas">
+  <g fill="none" stroke="#111111" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter">
+    <path d="M20 10v18a6 6 0 0 1-12 0V10"/>
+    <path d="M8 10v10"/>
+    <path d="M14 10v10"/>
+    <path d="M20 10v10"/>
+    <path d="M14 34v20"/>
+    <path d="M36 12h14l-2 40H38z"/>
+    <path d="M38 28h10"/>
+  </g>
+  <rect x="6" y="54" width="52" height="4" fill="#FC680C"/>
+</svg>

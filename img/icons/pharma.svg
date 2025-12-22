@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Farmacéutico y salud">
+  <g fill="none" stroke="#111111" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter">
+    <path d="M24 10h16"/>
+    <path d="M24 10v12l-8 10a14 14 0 0 0 11 22h10a14 14 0 0 0 11-22l-8-10V10"/>
+    <path d="M26 38h12"/>
+    <path d="M32 32v12"/>
+  </g>
+  <rect x="18" y="28" width="28" height="4" fill="#FC680C"/>
+</svg>

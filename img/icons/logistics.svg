@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Logística e inventarios">
+  <g fill="none" stroke="#111111" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter">
+    <path d="M10 42V22h28v20H10z"/>
+    <path d="M38 30h10l6 6v6H38v-12z"/>
+    <path d="M18 46a4 4 0 1 0 0 .1"/>
+    <path d="M46 46a4 4 0 1 0 0 .1"/>
+  </g>
+  <rect x="14" y="26" width="12" height="4" fill="#FC680C"/>
+</svg>
