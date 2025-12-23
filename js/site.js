@@ -102,7 +102,7 @@
                 <input class="ml-input" id="ml-cantidad" name="cantidad_estimada" placeholder="Ej. 5,000" />
               </div>
 
-              <div class="ml-field">
+              <div class="ml-field ml-field--full-sm">
                 <label class="ml-label" for="ml-fecha">Entrega deseada</label>
                 <input class="ml-input" id="ml-fecha" name="fecha_entrega" type="date" />
               </div>

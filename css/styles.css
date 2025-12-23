@@ -1745,6 +1745,17 @@ a:hover {
   }
 }
 
+/* Mobile: show two fields per row in quote form */
+@media (max-width: 640px) {
+  .ml-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .ml-field--full-sm {
+    grid-column: 1 / -1;
+  }
+}
+
 .ml-field--full {
   grid-column: 1 / -1;
 }
