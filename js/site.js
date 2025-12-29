@@ -94,6 +94,8 @@
                   <option>Vinil</option>
                   <option>Transparente</option>
                   <option>Otro</option>
+                  <option>Tarjetas en PVC</option>
+                  <option>Tarjetas NFC</option>
                 </select>
               </div>
 
