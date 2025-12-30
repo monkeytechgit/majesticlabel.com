@@ -1,5 +1,5 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://majesticlabel.com/sitemap.xml
-Host: majesticlabel.com
+Sitemap: https://www.majesticlabel.com/sitemap.xml
+Host: www.majesticlabel.com
