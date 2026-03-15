@@ -96,10 +96,38 @@ a:hover {
 .btn--quote {
   background: var(--color-accent);
   color: #ffffff;
+  position: relative;
 }
 
 .btn--quote:hover {
   filter: brightness(0.98);
+}
+
+.btn--quote:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.btn-spinner {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-spinner::before {
+  content: '';
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: #ffffff;
+  border-radius: 50%;
+  animation: btn-spin 0.6s linear infinite;
+}
+
+@keyframes btn-spin {
+  to { transform: rotate(360deg); }
 }
 
 /* CTA secundario: Conocer más */

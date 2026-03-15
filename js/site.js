@@ -12,12 +12,61 @@
       "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRzY2l5eW1laHZpdnF2dWJ1a3B2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjYzNzcxNjMsImV4cCI6MjA4MTk1MzE2M30.o-StWAzQevNCmTmF2LYQC6yiwF2F95-G5BoNDYGLk_s",
   };
 
+  const EMAILJS = {
+    publicKey: "5vTFdcXJ0G3y7ZaPs",
+    serviceId: "service_kcibpkg",
+    templateId: "template_y4y0gl8",
+  };
+
   const SELECTORS = {
     modal: "#ml-quote-modal",
     form: "#ml-quote-form",
     result: "#ml-quote-result",
     openers: "a.btn--quote, a[href*='#cotizacion']",
   };
+
+  let emailJsInitPromise = null;
+
+  function ensureEmailJsLoadedAndInit() {
+    if (emailJsInitPromise) return emailJsInitPromise;
+
+    emailJsInitPromise = new Promise((resolve, reject) => {
+      const init = () => {
+        try {
+          if (!window.emailjs || typeof window.emailjs.send !== 'function') {
+            throw new Error('EmailJS SDK no disponible');
+          }
+          window.emailjs.init({ publicKey: EMAILJS.publicKey });
+          resolve();
+        } catch (e) {
+          reject(e);
+        }
+      };
+
+      if (window.emailjs && typeof window.emailjs.send === 'function') {
+        init();
+        return;
+      }
+
+      const existing = document.querySelector('script[data-emailjs-sdk="true"]');
+      if (existing) {
+        existing.addEventListener('load', init, { once: true });
+        existing.addEventListener('error', () => reject(new Error('No se pudo cargar EmailJS')), { once: true });
+        return;
+      }
+
+      const script = document.createElement('script');
+      script.type = 'text/javascript';
+      script.src = 'https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js';
+      script.async = true;
+      script.setAttribute('data-emailjs-sdk', 'true');
+      script.onload = init;
+      script.onerror = () => reject(new Error('No se pudo cargar EmailJS'));
+      document.head.appendChild(script);
+    });
+
+    return emailJsInitPromise;
+  }
 
   function elFromHTML(html) {
     const tpl = document.createElement("template");
@@ -119,7 +168,10 @@
 
             <div class="ml-actions">
               <button type="button" class="btn btn--ghost" data-ml-close="true">Cancelar</button>
-              <button type="submit" class="btn btn--quote">Enviar solicitud</button>
+              <button type="submit" class="btn btn--quote">
+                <span class="btn-text">Enviar solicitud</span>
+                <span class="btn-spinner" style="display:none;">Enviando...</span>
+              </button>
             </div>
           </form>
 
@@ -235,6 +287,11 @@
 
     showFormView();
 
+    // Precargar EmailJS en segundo plano para que esté listo cuando se envíe
+    ensureEmailJsLoadedAndInit().catch(err => {
+      console.warn('⚠️ No se pudo precargar EmailJS:', err);
+    });
+
     document.documentElement.classList.add("ml-lock");
     document.body.classList.add("ml-lock");
 
@@ -306,7 +363,14 @@
     }
 
     const submit = form.querySelector("button[type='submit']");
-    if (submit instanceof HTMLButtonElement) submit.disabled = true;
+    const btnText = submit ? submit.querySelector('.btn-text') : null;
+    const btnSpinner = submit ? submit.querySelector('.btn-spinner') : null;
+    
+    if (submit instanceof HTMLButtonElement) {
+      submit.disabled = true;
+      if (btnText instanceof HTMLElement) btnText.style.display = 'none';
+      if (btnSpinner instanceof HTMLElement) btnSpinner.style.display = 'inline';
+    }
 
     try {
       const payload = { ...values };
@@ -315,6 +379,41 @@
       if (!payload.cantidad_estimada) delete payload.cantidad_estimada;
       if (!payload.fecha_entrega) delete payload.fecha_entrega;
 
+      // Obtener el nombre de la página actual para el título
+      const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+      
+      // Preparar fecha en formato local para el email
+      const fechaLocal = values.fecha_entrega 
+        ? new Date(values.fecha_entrega).toLocaleDateString('es-MX') 
+        : '';
+
+      // 1) Enviar correo por EmailJS (ya precargado al abrir el modal)
+      if (!window.emailjs || typeof window.emailjs.send !== 'function') {
+        // Si por alguna razón no se cargó, intentar cargarlo ahora
+        await ensureEmailJsLoadedAndInit();
+      }
+
+      const templateParams = {
+        nombre: values.nombre_completo,
+        empresa: values.empresa || '',
+        correo: values.correo,
+        telefono: values.telefono,
+        producto: values.tipo_material || 'No especificado',
+        cantidad: values.cantidad_estimada || 'No especificada',
+        entrega: fechaLocal,
+        descripcion: values.descripcion_proyecto,
+        title: `Majestic Label | Cotización: ${values.tipo_material || 'Producto'} (${currentPage})`,
+        name: values.nombre_completo
+      };
+
+      const emailResp = await window.emailjs.send(
+        EMAILJS.serviceId, 
+        EMAILJS.templateId, 
+        templateParams
+      );
+      console.log('✅ EmailJS enviado:', emailResp);
+
+      // 2) Enviar a Supabase
       const res = await fetch(`${SUPABASE.url}/rest/v1/contacto_webpage`, {
         method: "POST",
         headers: {
@@ -331,6 +430,8 @@
         throw new Error(text || `Error ${res.status}`);
       }
 
+      console.log('✅ Cotización enviada exitosamente');
+
       form.reset();
       showResultView(
         "success",
@@ -338,18 +439,31 @@
         "¡Listo! Recibimos tu solicitud. Te contactaremos pronto.",
         { showBack: false }
       );
+
+      // Enviar evento a Google Analytics (si está configurado)
+      if (typeof gtag !== 'undefined') {
+        gtag('event', 'form_submit', {
+          event_category: 'cotizacion',
+          event_label: values.tipo_material,
+          value: values.cantidad_estimada
+        });
+      }
+
     } catch (err) {
+      console.error('❌ Error al enviar cotización:', err);
       setAlert("No se pudo enviar. Revisa tus datos e intenta de nuevo.", "error");
       showResultView(
         "error",
         "No se pudo enviar",
-        "Ocurrió un error al enviar la cotización. Intenta de nuevo.",
+        "Ocurrió un error al enviar la cotización. Intenta de nuevo o contáctanos por WhatsApp.",
         { showBack: true }
       );
-      // eslint-disable-next-line no-console
-      console.error(err);
     } finally {
-      if (submit instanceof HTMLButtonElement) submit.disabled = false;
+      if (submit instanceof HTMLButtonElement) {
+        submit.disabled = false;
+        if (btnText instanceof HTMLElement) btnText.style.display = 'inline';
+        if (btnSpinner instanceof HTMLElement) btnSpinner.style.display = 'none';
+      }
     }
   }
 
@@ -385,6 +499,11 @@
     ensureWhatsAppFab();
     ensureQuoteModal();
     bindQuoteOpeners();
+
+    // Precargar EmailJS al inicio de la página para evitar demoras
+    ensureEmailJsLoadedAndInit().catch(err => {
+      console.warn('⚠️ No se pudo precargar EmailJS:', err);
+    });
 
     if (window.location.hash === "#cotizacion") {
       openModal();
