@@ -1,8 +1,8 @@
 (() => {
   const CONTACT = {
-    phoneDisplay: "+52 663 1212 905",
-    phoneTel: "+526631212905",
-    phoneWa: "526631212905",
+    phoneDisplay: "+52 663 4282 720",
+    phoneTel: "+526634282720",
+    phoneWa: "526634282720",
     email: "daniel@majesticlabel.com",
   };
 
